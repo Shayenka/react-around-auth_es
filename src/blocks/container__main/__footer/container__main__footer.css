@@ -1,0 +1,10 @@
+.container__main__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 358px;
+  height: 17px;
+  margin: auto;
+  margin-top: 15px;
+  
+}

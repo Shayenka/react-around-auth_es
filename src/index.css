@@ -51,3 +51,14 @@
 @import url(./blocks/image-show/__close-icon/image-show__close-icon.css);
 @import url(./blocks/image-show/__popup/image-show__popup.css);
 @import url(./blocks/image-show/__title/image-show__title.css);
+
+@import url(./blocks/container__main/container__main.css);
+@import url(./blocks/container__main/__title/container__main__title.css);
+@import url(./blocks/container__main/__text/container__main__text.css);
+@import url(./blocks/container__main/__text-footer/container__main__text-footer.css);
+@import url(./blocks/container__main/__button/container__main__button.css);
+@import url(./blocks/header/__text/header__text.css);
+@import url(./blocks/header/__container-texts/header__container-texts.css);
+@import url(./blocks/header/__text/_email/header__text_email.css);
+@import url(./blocks/container__main/__text-footer/_link/container__main__text-footer_link.css);
+@import url(./blocks/container__main/__footer/container__main__footer.css);
