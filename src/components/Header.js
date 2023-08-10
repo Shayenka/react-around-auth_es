@@ -4,7 +4,7 @@ import logo from "../images/logo.svg";
 
 function Header() {
   return (
-    <header className="header">
+    <header className="header header_main">
       <img className="header__logo" src={logo} alt="logo Around The U.S" />
       <div className="header__container-texts"> 
       <h3 className="header__text_email">email@mail.com</h3>

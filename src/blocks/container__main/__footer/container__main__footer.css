@@ -8,3 +8,9 @@
   margin-top: 15px;
   
 }
+
+@media screen and (min-width: 320px) and (max-width: 767px) {
+  .container__main__footer {
+      max-width: 300px;
+  }
+}

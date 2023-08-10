@@ -1,21 +1,26 @@
 import "../index.css";
 import React, { useState, useEffect } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Header from "../components/Header";
 import Register from "../components/Register";
+import Login from "../components/Login";
 import Main from "../components/Main";
 import Footer from "../components/Footer";
 import EditProfilePopup from "../components/EditProfilePopup.js";
 import EditAvatarPopup from "../components/EditAvatarPopup.js";
 import AddPlacePopup from "../components/AddPlacePopup.js";
 import ImagePopup from "../components/ImagePopup.js";
+import PopUpRegister from "../components/PopUpRegister";
 import api from "../utils/api.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
-import { BrowserRouter } from "react-router-dom";
+// import { Switch }  from "react-router-dom/cjs/react-router-dom.min";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+
+  const [isPopupOpenRegister, setIsPopupOpenRegister] = useState(false);
 
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState();
@@ -100,10 +105,15 @@ function App() {
     setIsEditAvatarPopupOpen(true);
   }
 
+  function handlePopupOpenRegister() {
+    setIsPopupOpenRegister(true);
+  }
+
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    setIsPopupOpenRegister(false);
     setSelectedCard(null);
   }
 
@@ -113,42 +123,57 @@ function App() {
         <div className="page">
           <CurrentUserContext.Provider value={currentUser}>
             <Header />
-            <Register />
-            <Main
-              onEditProfileClick={handleEditProfileClick}
-              onAddPlaceClick={handleAddPlaceClick}
-              onEditAvatarClick={handleEditAvatarClick}
-              onCardClick={handleCardClick}
-              cards={cards}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-            />
-            {isEditProfilePopupOpen && (
-              <EditProfilePopup
-                isOpen={isEditProfilePopupOpen}
-                onClose={closeAllPopups}
-                onUpdateUser={handleUpdateUser}
-              />
-            )}
-  
-            {isEditAvatarPopupOpen && (
-              <EditAvatarPopup
-                isOpen={isEditAvatarPopupOpen}
-                onClose={closeAllPopups}
-                onUpdateAvatar={handleUpdateAvatar}
-              />
-            )}
-  
-            {isAddPlacePopupOpen && (
-              <AddPlacePopup
-                isOpen={isAddPlacePopupOpen}
-                onClose={closeAllPopups}
-                onAddPlace={handleAddPlaceSubmit}
-              />
-            )}
-            {selectedCard && (
-              <ImagePopup selectedCard={selectedCard} onClose={closeAllPopups} />
-            )}
+            <Switch>
+              <Route path="/signin">
+                <Login />
+              </Route>
+              <Route path="/signup">
+                <Register />
+              </Route>
+
+              <Route exact path="/">
+                <Main
+                  onEditProfileClick={handleEditProfileClick}
+                  onAddPlaceClick={handleAddPlaceClick}
+                  onEditAvatarClick={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  cards={cards}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                />
+                {isEditProfilePopupOpen && (
+                  <EditProfilePopup
+                    isOpen={isEditProfilePopupOpen}
+                    onClose={closeAllPopups}
+                    onUpdateUser={handleUpdateUser}
+                  />
+                )}
+
+                {isEditAvatarPopupOpen && (
+                  <EditAvatarPopup
+                    isOpen={isEditAvatarPopupOpen}
+                    onClose={closeAllPopups}
+                    onUpdateAvatar={handleUpdateAvatar}
+                  />
+                )}
+
+                {isAddPlacePopupOpen && (
+                  <AddPlacePopup
+                    isOpen={isAddPlacePopupOpen}
+                    onClose={closeAllPopups}
+                    onAddPlace={handleAddPlaceSubmit}
+                  />
+                )}
+                {selectedCard && (
+                  <ImagePopup
+                    selectedCard={selectedCard}
+                    onClose={closeAllPopups}
+                  />
+                )}
+              </Route>
+            </Switch>
+            {/* <PopUpRegister onClose={closeAllPopups} /> */}
+
             <Footer />
           </CurrentUserContext.Provider>
         </div>
