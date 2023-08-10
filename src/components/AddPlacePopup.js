@@ -1,19 +1,31 @@
 import React, { useState } from "react";
 import PopupWithForm from "./PopupWithForm";
+import { ValidateLink, ValidateName } from "../utils/Validator.js"
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
   const [placeName, setPlaceName] = useState("");
   const [placeLink, setPlaceLink] = useState("");
+
+  const [placeNameError, setPlaceNameError] = useState("");
+  const [placeLinkError, setPlaceLinkError] = useState("");
+
   function handleSubmit(evt) {
     evt.preventDefault();
     onAddPlace(placeName, placeLink);
   }
 
   function onNameChange(evt) {
-    setPlaceName(evt.target.value);
+    const newNamePlace = evt.target.value;
+    setPlaceName(newNamePlace);
+    const error = ValidateName(newNamePlace);
+    setPlaceNameError(error);
   }
+
   function onLinkChange(evt) {
-    setPlaceLink(evt.target.value);
+    const newLinkPlace = evt.target.value;
+    setPlaceLink(newLinkPlace);
+    const error = ValidateLink(newLinkPlace);
+    setPlaceLinkError(error);
   }
 
   return (
@@ -34,10 +46,10 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
           className="popup__text"
           required
           minLength="2"
-          maxLength="30"
+          maxLength="20"
           onChange={onNameChange}
         />
-        <span className="popup__input-error" id="titulo-error"></span>
+        <span className="popup__input-error" id="titulo-error">{placeNameError}</span>
         <input
           type="url"
           id="enlace"
@@ -47,7 +59,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
           required
           onChange={onLinkChange}
         />
-        <span className="popup__input-error" id="enlace-error"></span>
+        <span className="popup__input-error" id="enlace-error">{placeLinkError}</span>
       </div>
     </PopupWithForm>
   );

@@ -1,14 +1,25 @@
-import React, { useRef, useContext } from "react";
+import React, { useState, useRef, useContext } from "react";
 import PopupWithForm from "./PopupWithForm.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
+import { ValidateLink } from "../utils/Validator.js";
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
   const currentUser = useContext(CurrentUserContext);
   const avatar = useRef(currentUser.avatar);
 
+  const [avatarLink, setAvatarLink] = useState("");
+  const [avatarError, setAvatarError] = useState("");
+
   function handleSubmit(evt) {
     evt.preventDefault();
-    onUpdateAvatar(avatar.current);
+    onUpdateAvatar(avatarLink);
+  }
+
+  function handleAvatarChange(evt) {
+    const newLinkAvatar = evt.target.value;
+    setAvatarLink(newLinkAvatar);
+    const error = ValidateLink(newLinkAvatar);
+    setAvatarError(error);
   }
 
   return (
@@ -28,11 +39,9 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
           placeholder="URL de la foto de perfil"
           className="popup__text"
           required
-          onChange={(evt) => {
-            avatar.current = evt.target.value;
-          }}
+          onChange={handleAvatarChange}
         />
-        <span className="popup__input-error" id="linkAvatar-error"></span>
+        <span className="popup__input-error" id="linkAvatar-error">{avatarError}</span>
       </div>
     </PopupWithForm>
   );

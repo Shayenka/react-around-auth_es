@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
+import {ValidateEmail, ValidatePassword}  from "../utils/Validator.js";
 import logo from "../images/logo.svg";
 
 function Register() {
   const currentUser = useContext(CurrentUserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   useEffect(() => {
     setEmail(currentUser.email);
@@ -23,13 +26,20 @@ function Register() {
   }
 
   function handleEmailChange(evt) {
-    setEmail(evt.target.value);
+    const newEmail = evt.target.value;
+    setEmail(newEmail);
+    const error = ValidateEmail(newEmail);
+    setEmailError(error);
   }
 
   function handlePasswordChange(evt) {
-    setPassword(evt.target.value);
+    const newPassword = evt.target.value;
+    setPassword(newPassword);
+    const error = ValidatePassword(newPassword);
+    setPasswordError(error);
   }
-  return (
+
+return (
     <><section className="header">
           <img className="header__logo" src={logo} alt="logo Around The U.S" />
           <div className="header__container-texts">
@@ -49,7 +59,7 @@ function Register() {
                       maxLength="40"
                       value={email || ""}
                       onChange={handleEmailChange} />
-                  <span className="popup__input-error" id="name-error"></span>
+                  <span className="popup__input-error" id="email-error">{emailError}</span>
                   <input
                       type="text"
                       id="password"
@@ -60,7 +70,7 @@ function Register() {
                       maxLength="200"
                       value={password || ""}
                       onChange={handlePasswordChange} />
-                  <span className="popup__input-error" id="about-error"></span>
+                  <span className="popup__input-error" id="password-error">{passwordError}</span>
               </div>
               <button
                   type="submit"

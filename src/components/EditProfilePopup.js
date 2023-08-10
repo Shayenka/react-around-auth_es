@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import PopupWithForm from "./PopupWithForm.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
+import { ValidateName, ValidateUserDescription } from "../utils/Validator.js"
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   const currentUser = useContext(CurrentUserContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
 
   useEffect(() => {
     setName(currentUser.name);
@@ -22,11 +25,17 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   }
 
   function handleNameChange(evt) {
-    setName(evt.target.value);
+    const newName = evt.target.value;
+    setName(newName);
+    const error = ValidateName(newName);
+    setNameError(error);
   }
 
   function handleDescriptionChange(evt) {
-    setDescription(evt.target.value);
+    const newDescription = evt.target.value;
+    setDescription(newDescription );
+    const error = ValidateUserDescription(newDescription );
+    setDescriptionError(error);
   }
   return (
     <PopupWithForm
@@ -45,11 +54,11 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
           className="popup__text"
           required
           minLength="2"
-          maxLength="40"
+          maxLength="20"
           value={name || ""}
           onChange={handleNameChange}
         />
-        <span className="popup__input-error" id="name-error"></span>
+        <span className="popup__input-error" id="name-error">{nameError}</span>
         <input
           type="text"
           id="about"
@@ -61,7 +70,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
           value={description || ""}
           onChange={handleDescriptionChange}
         />
-        <span className="popup__input-error" id="about-error"></span>
+        <span className="popup__input-error" id="about-error">{descriptionError}</span>
       </div>
     </PopupWithForm>
   );
