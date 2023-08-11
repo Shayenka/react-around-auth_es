@@ -40,12 +40,12 @@ function Login() {
   }
 
 return (
-    <><section className="header">
-          <img className="header__logo" src={logo} alt="logo Around The U.S" />
-          <div className="header__container-texts">
-          <Link to="/signint" className="header__text" style={{ textDecoration: "none" }}>Regístrate</Link>
-          </div>
-      </section>
+    // <><section className="header">
+    //       <img className="header__logo" src={logo} alt="logo Around The U.S" />
+    //       <div className="header__container-texts">
+    //       <Link to="/signint" className="header__text" style={{ textDecoration: "none" }}>Regístrate</Link>
+    //       </div>
+    //   </section>
       <section className={`container__main`}>
               <h3 className="container__main__title">Iniciar Sesión</h3>
               <div>
@@ -83,7 +83,7 @@ return (
               Regístrate aquí
         </Link>
         </div>
-          </section></>
+          </section>
   );
 }
 

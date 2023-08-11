@@ -1,6 +1,9 @@
 import "../index.css";
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "../components/ProtectedRoute";
+import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
+
 import Header from "../components/Header";
 import Register from "../components/Register";
 import Login from "../components/Login";
@@ -12,8 +15,6 @@ import AddPlacePopup from "../components/AddPlacePopup.js";
 import ImagePopup from "../components/ImagePopup.js";
 import PopUpRegister from "../components/PopUpRegister";
 import api from "../utils/api.js";
-import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
-// import { Switch }  from "react-router-dom/cjs/react-router-dom.min";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -26,6 +27,8 @@ function App() {
   const [selectedCard, setSelectedCard] = useState();
 
   const [currentUser, setCurrentUser] = useState({});
+
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     api
@@ -118,67 +121,55 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <div className="body">
-        <div className="page">
-          <CurrentUserContext.Provider value={currentUser}>
-            <Header />
-            <Switch>
-              <Route path="/signin">
-                <Login />
-              </Route>
-              <Route path="/signup">
-                <Register />
-              </Route>
+    <div className="body">
+      <div className="page">
+        <CurrentUserContext.Provider value={currentUser}>
+          <Header />
+          <Routes>
+            <Route path="/signin" element={<Login />} />
+            <Route path="/signup" element={<Register />} />
+            <ProtectedRoute path="/" loggedIn={loggedIn} component={Main}
+                onEditProfileClick={handleEditProfileClick}
+                onAddPlaceClick={handleAddPlaceClick}
+                onEditAvatarClick={handleEditAvatarClick}
+                onCardClick={handleCardClick}
+                cards={cards}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+              />
+          </Routes>
+          {isEditProfilePopupOpen && (
+            <EditProfilePopup
+              isOpen={isEditProfilePopupOpen}
+              onClose={closeAllPopups}
+              onUpdateUser={handleUpdateUser}
+            />
+          )}
 
-              <Route exact path="/">
-                <Main
-                  onEditProfileClick={handleEditProfileClick}
-                  onAddPlaceClick={handleAddPlaceClick}
-                  onEditAvatarClick={handleEditAvatarClick}
-                  onCardClick={handleCardClick}
-                  cards={cards}
-                  onCardLike={handleCardLike}
-                  onCardDelete={handleCardDelete}
-                />
-                {isEditProfilePopupOpen && (
-                  <EditProfilePopup
-                    isOpen={isEditProfilePopupOpen}
-                    onClose={closeAllPopups}
-                    onUpdateUser={handleUpdateUser}
-                  />
-                )}
+          {isEditAvatarPopupOpen && (
+            <EditAvatarPopup
+              isOpen={isEditAvatarPopupOpen}
+              onClose={closeAllPopups}
+              onUpdateAvatar={handleUpdateAvatar}
+            />
+          )}
 
-                {isEditAvatarPopupOpen && (
-                  <EditAvatarPopup
-                    isOpen={isEditAvatarPopupOpen}
-                    onClose={closeAllPopups}
-                    onUpdateAvatar={handleUpdateAvatar}
-                  />
-                )}
+          {isAddPlacePopupOpen && (
+            <AddPlacePopup
+              isOpen={isAddPlacePopupOpen}
+              onClose={closeAllPopups}
+              onAddPlace={handleAddPlaceSubmit}
+            />
+          )}
+          {selectedCard && (
+            <ImagePopup selectedCard={selectedCard} onClose={closeAllPopups} />
+          )}
+          {/* <PopUpRegister onClose={closeAllPopups} /> */}
 
-                {isAddPlacePopupOpen && (
-                  <AddPlacePopup
-                    isOpen={isAddPlacePopupOpen}
-                    onClose={closeAllPopups}
-                    onAddPlace={handleAddPlaceSubmit}
-                  />
-                )}
-                {selectedCard && (
-                  <ImagePopup
-                    selectedCard={selectedCard}
-                    onClose={closeAllPopups}
-                  />
-                )}
-              </Route>
-            </Switch>
-            {/* <PopUpRegister onClose={closeAllPopups} /> */}
-
-            <Footer />
-          </CurrentUserContext.Provider>
-        </div>
+          <Footer />
+        </CurrentUserContext.Provider>
       </div>
-    </BrowserRouter>
+    </div>
   );
 }
 
