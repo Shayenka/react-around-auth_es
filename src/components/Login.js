@@ -1,29 +1,15 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
-import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
-import {ValidateEmail, ValidatePassword}  from "../utils/Validator.js";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ValidateEmail, ValidatePassword } from "../utils/Validator.js";
 import logo from "../images/logo.svg";
+import { authorize } from "../utils/auth.js";
 
-function Login() {
-  const currentUser = useContext(CurrentUserContext);
+function Login({ onLoggedIn }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
-  useEffect(() => {
-    setEmail(currentUser.email);
-    setPassword(currentUser.password);
-  }, [currentUser]);
-
-  function handleSubmit(evt) {
-    evt.preventDefault();
-
-    // onUpdateRegiste({ //LLAMAR DESDE APP.JS CON CONFICIÓN QUE HACE EL LLAMDO A LA API PARA ACTUALIZAR INFO
-    //   email,
-    //   password,
-    // });
-  }
+  const navigate = useNavigate();
 
   function handleEmailChange(evt) {
     const newEmail = evt.target.value;
@@ -39,51 +25,88 @@ function Login() {
     setPasswordError(error);
   }
 
-return (
-    // <><section className="header">
-    //       <img className="header__logo" src={logo} alt="logo Around The U.S" />
-    //       <div className="header__container-texts">
-    //       <Link to="/signint" className="header__text" style={{ textDecoration: "none" }}>Regístrate</Link>
-    //       </div>
-    //   </section>
-      <section className={`container__main`}>
-              <h3 className="container__main__title">Iniciar Sesión</h3>
-              <div>
-                  <input
-                      type="text"
-                      id="email"
-                      placeholder="Correo electrónico"
-                      className="container__main__text"
-                      required
-                      minLength="2"
-                      maxLength="40"
-                      value={email || ""}
-                      onChange={handleEmailChange} />
-                  <span className="popup__input-error" id="email-error">{emailError}</span>
-                  <input
-                      type="text"
-                      id="password"
-                      placeholder="Contraseña"
-                      className="container__main__text"
-                      required
-                      minLength="2"
-                      maxLength="200"
-                      value={password || ""}
-                      onChange={handlePasswordChange} />
-                  <span className="popup__input-error" id="password-error">{passwordError}</span>
-              </div>
-              <button
-                  type="submit"
-                  className="container__main__button"
-                  onClick={handleSubmit}
-              >Iniciar Sesión
-              </button>
-              <div className="container__main__footer">
-              <h4 className="container__main__text-footer">¿Aún no eres miembro?</h4><Link to="/signint" className="container__main__text-footer_link" style={{ textDecoration: "none"}}>
-              Regístrate aquí
-        </Link>
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    if (!email || !password) {
+      return;
+    }
+    authorize(email, password)
+      .then((data) => {
+        if (data.jwt) {
+          onLoggedIn(); // Indicar que el usuario ha iniciado sesión
+          navigate.push("/"); // Redirigir al usuario a la página principal
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  return (
+    <>
+      <section className="header">
+        <img className="header__logo" src={logo} alt="logo Around The U.S" />
+        <div className="header__container-texts">
+          <Link
+            to="/signint"
+            className="header__text"
+            style={{ textDecoration: "none" }}
+          >
+            Regístrate
+          </Link>
         </div>
-          </section>
+      </section>
+      <form className="container__main" onSubmit={handleSubmit}>
+        <h3 className="container__main__title">Iniciar Sesión</h3>
+        <div>
+          <input
+            type="text"
+            id="email"
+            placeholder="Correo electrónico"
+            className="container__main__text"
+            required
+            minLength="2"
+            maxLength="40"
+            value={email || ""}
+            onChange={handleEmailChange}
+          />
+          <span className="popup__input-error" id="email-error">
+            {emailError}
+          </span>
+          <input
+            type="text"
+            id="password"
+            placeholder="Contraseña"
+            className="container__main__text"
+            required
+            minLength="2"
+            maxLength="200"
+            value={password || ""}
+            onChange={handlePasswordChange}
+          />
+          <span className="popup__input-error" id="password-error">
+            {passwordError}
+          </span>
+        </div>
+        <button
+          type="submit"
+          className="container__main__button"
+          onClick={handleSubmit}
+        >
+          Iniciar Sesión
+        </button>
+        <div className="container__main__footer">
+          <h4 className="container__main__text-footer">
+            ¿Aún no eres miembro?
+          </h4>
+          <Link
+            to="/signup"
+            className="container__main__text-footer_link"
+            style={{ textDecoration: "none" }}
+          >
+            Regístrate aquí
+          </Link>
+        </div>
+      </form>
+    </>
   );
 }
 

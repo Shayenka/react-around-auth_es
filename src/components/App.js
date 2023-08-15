@@ -13,35 +13,58 @@ import EditProfilePopup from "../components/EditProfilePopup.js";
 import EditAvatarPopup from "../components/EditAvatarPopup.js";
 import AddPlacePopup from "../components/AddPlacePopup.js";
 import ImagePopup from "../components/ImagePopup.js";
-import PopUpRegister from "../components/PopUpRegister";
+// import PopUpRegister from "../components/PopUpRegister";
 import api from "../utils/api.js";
+import { registerUser, checkTokenValidity } from "../utils/auth";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
 
-  const [isPopupOpenRegister, setIsPopupOpenRegister] = useState(false);
+  // const [isPopupOpenRegister, setIsPopupOpenRegister] = useState(false);
 
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState();
 
   const [currentUser, setCurrentUser] = useState({});
 
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
 
   useEffect(() => {
-    api
-      .getUserInfo()
-      .then((response) => {
-        setCurrentUser(response);
-      })
-      .catch((error) => {
-        console.log("Error al obtener los datos del usuario:", error);
-      });
+    const token = localStorage.getItem('jwt');
+  
+    if (token) {
+      checkTokenValidity(token)
+        .then((userData) => {
+          setLoggedIn(true);
+          setCurrentUser(userData.data); // Guardando los datos del usuario 
+        })
+        .catch((error) => {
+          console.error('Error de token:', error);
+        });
+    } else {
+      setLoggedIn(false); // Aquí, si no hay token, el usuario no está autenticado
+    }
   }, []);
 
+  // useEffect(() => {
+  //   api
+  //     .getUserInfo()
+  //     .then((response) => {
+  //       setCurrentUser(response);
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error al obtener los datos del usuario:", error);
+  //     });
+  // }, []);
+
   useEffect(() => {
+    // const api = new Api({
+    //   address: "https://nomoreparties.co",
+    //   groupId: `web_es_05`,
+    //   token: `3270d03d-8b4c-49a2-869b-f096d27af6a5`,
+    // });
     api
       .getCards()
       .then((response) => {
@@ -108,15 +131,33 @@ function App() {
     setIsEditAvatarPopupOpen(true);
   }
 
-  function handlePopupOpenRegister() {
-    setIsPopupOpenRegister(true);
+  async function handleRegisterUser(email, password) {
+    try {
+      const response = await registerUser(email, password);
+      return response;
+    } catch (error) {
+      console.error("Error during user registration:", error);
+    }
   }
+
+  function handleLogin(data) {
+    setLoggedIn(true);
+  }
+
+  function handleLogout() {
+    localStorage.removeItem('jwt');
+    setLoggedIn(false);
+  }
+
+  // function handlePopupOpenRegister() {
+  //   setIsPopupOpenRegister(true);
+  // }
 
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
-    setIsPopupOpenRegister(false);
+    // setIsPopupOpenRegister(false);
     setSelectedCard(null);
   }
 
@@ -124,19 +165,34 @@ function App() {
     <div className="body">
       <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
-          <Header />
+        {loggedIn ? (
+            <Header onLogout={handleLogout} />
+          ) : null}
           <Routes>
-            <Route path="/signin" element={<Login />} />
-            <Route path="/signup" element={<Register />} />
-            <ProtectedRoute path="/" loggedIn={loggedIn} component={Main}
-                onEditProfileClick={handleEditProfileClick}
-                onAddPlaceClick={handleAddPlaceClick}
-                onEditAvatarClick={handleEditAvatarClick}
-                onCardClick={handleCardClick}
-                cards={cards}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
-              />
+            <Route
+              path="/signin"
+              element={<Login onLoggedIn={handleLogin} />}
+            />
+            <Route
+              path="/signup"
+              element={<Register onRegister={handleRegisterUser} />}
+            />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute
+                  loggedIn={loggedIn}
+                  component={Main}
+                  onEditProfileClick={handleEditProfileClick}
+                  onAddPlaceClick={handleAddPlaceClick}
+                  onEditAvatarClick={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  cards={cards}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                />
+              }
+            />
           </Routes>
           {isEditProfilePopupOpen && (
             <EditProfilePopup
@@ -164,7 +220,6 @@ function App() {
           {selectedCard && (
             <ImagePopup selectedCard={selectedCard} onClose={closeAllPopups} />
           )}
-          {/* <PopUpRegister onClose={closeAllPopups} /> */}
 
           <Footer />
         </CurrentUserContext.Provider>

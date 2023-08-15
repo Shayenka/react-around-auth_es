@@ -87,6 +87,15 @@ class Api {
       return result;
     });
   }
+
+  async registerUser(email, password) {
+    const registerUser = await this._useFetch(
+      `https://register.nomoreparties.co/signup)`,
+      `POST`,
+      { email, password }
+    );
+    return registerUser;
+  }
 }
 
 const api = new Api({
@@ -95,4 +104,4 @@ const api = new Api({
   token: `3270d03d-8b4c-49a2-869b-f096d27af6a5`,
 });
 
-export default api;
+export default Api;
