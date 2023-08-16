@@ -33,6 +33,7 @@ function Login({ onLoggedIn }) {
     authorize(email, password)
       .then((data) => {
         if (data.jwt) {
+          console.log(data.jwt);
           onLoggedIn(); // Indicar que el usuario ha iniciado sesión
           navigate.push("/"); // Redirigir al usuario a la página principal
         }
@@ -46,7 +47,7 @@ function Login({ onLoggedIn }) {
         <img className="header__logo" src={logo} alt="logo Around The U.S" />
         <div className="header__container-texts">
           <Link
-            to="/signint"
+            to="/signup"
             className="header__text"
             style={{ textDecoration: "none" }}
           >

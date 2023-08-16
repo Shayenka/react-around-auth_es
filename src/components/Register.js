@@ -44,7 +44,7 @@ function Register( {onRegister} ) {
 
       if (userRegistered) {
         setShowPopupSuccessfulRegister(true);
-        navigate.push('/login');
+        navigate('/login');
       } else {
         setShowPopupFailedRegister(true);
         console.log('Error en el registo de usuario.');

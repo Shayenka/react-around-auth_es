@@ -13,8 +13,7 @@ import EditProfilePopup from "../components/EditProfilePopup.js";
 import EditAvatarPopup from "../components/EditAvatarPopup.js";
 import AddPlacePopup from "../components/AddPlacePopup.js";
 import ImagePopup from "../components/ImagePopup.js";
-// import PopUpRegister from "../components/PopUpRegister";
-import api from "../utils/api.js";
+import Api from "../utils/api.js";
 import { registerUser, checkTokenValidity } from "../utils/auth";
 
 function App() {
@@ -22,51 +21,54 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
 
-  // const [isPopupOpenRegister, setIsPopupOpenRegister] = useState(false);
-
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState();
 
   const [currentUser, setCurrentUser] = useState({});
 
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
-  
+    const token = localStorage.getItem("jwt");
+
     if (token) {
       checkTokenValidity(token)
         .then((userData) => {
           setLoggedIn(true);
-          setCurrentUser(userData.data); // Guardando los datos del usuario 
+          setCurrentUser(userData.data); // Guardando los datos del usuario
         })
         .catch((error) => {
-          console.error('Error de token:', error);
+          console.error("Error de token:", error);
         });
     } else {
       setLoggedIn(false); // Aquí, si no hay token, el usuario no está autenticado
     }
-  }, []);
-
-  // useEffect(() => {
-  //   api
-  //     .getUserInfo()
-  //     .then((response) => {
-  //       setCurrentUser(response);
-  //     })
-  //     .catch((error) => {
-  //       console.log("Error al obtener los datos del usuario:", error);
-  //     });
-  // }, []);
+  }, [loggedIn]);
 
   useEffect(() => {
-    // const api = new Api({
-    //   address: "https://nomoreparties.co",
-    //   groupId: `web_es_05`,
-    //   token: `3270d03d-8b4c-49a2-869b-f096d27af6a5`,
-    // });
+    const api = new Api({
+      address: "https://nomoreparties.co",
+      groupId: "web_es_05",
+      token: "3270d03d-8b4c-49a2-869b-f096d27af6a5",
+    });
     api
-      .getCards()
+      .getUserInfo()
+      .then((response) => {
+        setCurrentUser(response);
+      })
+      .catch((error) => {
+        console.log("Error al obtener los datos del usuario:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    const api = new Api({
+      address: "https://nomoreparties.co",
+      groupId: "web_es_05",
+      token: "3270d03d-8b4c-49a2-869b-f096d27af6a5",
+    });
+
+    api.getCards()
       .then((response) => {
         setCards(response);
       })
@@ -76,7 +78,7 @@ function App() {
   }, []);
 
   function handleUpdateUser(user) {
-    api.editUserInfo(user.name, user.about).then((response) => {
+    Api.editUserInfo(user.name, user.about).then((response) => {
       setCurrentUser(response);
       closeAllPopups();
     });
@@ -84,7 +86,7 @@ function App() {
 
   function handleUpdateAvatar(avatar) {
     const userAvatar = { avatar: avatar };
-    api.changeAvatarProfile(userAvatar).then((response) => {
+    Api.changeAvatarProfile(userAvatar).then((response) => {
       setCurrentUser(response);
       closeAllPopups();
     });
@@ -93,13 +95,13 @@ function App() {
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+    Api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
       setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
     });
   }
 
   function handleCardDelete(card) {
-    api.deleteCard(card._id).then(() => {
+    Api.deleteCard(card._id).then(() => {
       setCards(
         cards.filter((item) => {
           return item._id !== card._id;
@@ -109,7 +111,7 @@ function App() {
   }
 
   function handleAddPlaceSubmit(name, link) {
-    api.addNewCard(name, link).then((data) => {
+    Api.addNewCard(name, link).then((data) => {
       setCards([data, ...cards]);
       closeAllPopups();
     });
@@ -137,6 +139,7 @@ function App() {
       return response;
     } catch (error) {
       console.error("Error during user registration:", error);
+      throw error; 
     }
   }
 
@@ -145,19 +148,14 @@ function App() {
   }
 
   function handleLogout() {
-    localStorage.removeItem('jwt');
+    localStorage.removeItem("jwt");
     setLoggedIn(false);
   }
-
-  // function handlePopupOpenRegister() {
-  //   setIsPopupOpenRegister(true);
-  // }
 
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
-    // setIsPopupOpenRegister(false);
     setSelectedCard(null);
   }
 
@@ -165,9 +163,7 @@ function App() {
     <div className="body">
       <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
-        {loggedIn ? (
-            <Header onLogout={handleLogout} />
-          ) : null}
+          {loggedIn ? <Header onLogout={handleLogout} /> : null}
           <Routes>
             <Route
               path="/signin"
