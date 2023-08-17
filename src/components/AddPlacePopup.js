@@ -49,7 +49,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
           maxLength="20"
           onChange={onNameChange}
         />
-        <span className="popup__input-error" id="titulo-error">{placeNameError}</span>
+        <span className="popup__input-error_main" id="titulo-error">{placeNameError}</span>
         <input
           type="url"
           id="enlace"
@@ -59,7 +59,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
           required
           onChange={onLinkChange}
         />
-        <span className="popup__input-error" id="enlace-error">{placeLinkError}</span>
+        <span className="popup__input-error_main" id="enlace-error">{placeLinkError}</span>
       </div>
     </PopupWithForm>
   );

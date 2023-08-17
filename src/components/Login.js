@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ValidateEmail, ValidatePassword } from "../utils/Validator.js";
 import logo from "../images/logo.svg";
 import { authorize } from "../utils/auth.js";
 
-function Login({ onLoggedIn }) {
+function Login({ onLoggedIn, loggedIn }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   function handleEmailChange(evt) {
     const newEmail = evt.target.value;
@@ -32,10 +33,11 @@ function Login({ onLoggedIn }) {
     }
     authorize(email, password)
       .then((data) => {
-        if (data.jwt) {
-          console.log(data.jwt);
-          onLoggedIn(); // Indicar que el usuario ha iniciado sesión
-          navigate.push("/"); // Redirigir al usuario a la página principal
+        console.log(data);
+        if (data.token) {
+          console.log(data.token);
+          onLoggedIn(); 
+          navigate("/"); 
         }
       })
       .catch((err) => console.log(err));
@@ -43,6 +45,7 @@ function Login({ onLoggedIn }) {
 
   return (
     <>
+    {location.pathname === "/signin" && !loggedIn ? (
       <section className="header">
         <img className="header__logo" src={logo} alt="logo Around The U.S" />
         <div className="header__container-texts">
@@ -55,6 +58,7 @@ function Login({ onLoggedIn }) {
           </Link>
         </div>
       </section>
+      ) :null}
       <form className="container__main" onSubmit={handleSubmit}>
         <h3 className="container__main__title">Iniciar Sesión</h3>
         <div>
@@ -73,7 +77,7 @@ function Login({ onLoggedIn }) {
             {emailError}
           </span>
           <input
-            type="text"
+            type="password" 
             id="password"
             placeholder="Contraseña"
             className="container__main__text"

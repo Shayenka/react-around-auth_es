@@ -66,3 +66,4 @@
 @import url(./blocks/popup/__image-register/popup__image-register.css);
 @import url(./blocks/popup/__close-icon-register/popup__close-icon-register.css);
 @import url(./blocks/header/_main/header_main.css);
+@import url(./blocks/popup/__input-error/_main/popup__input-error_main.css);

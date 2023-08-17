@@ -41,7 +41,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
           required
           onChange={handleAvatarChange}
         />
-        <span className="popup__input-error" id="linkAvatar-error">{avatarError}</span>
+        <span className="popup__input-error_main" id="linkAvatar-error">{avatarError}</span>
       </div>
     </PopupWithForm>
   );

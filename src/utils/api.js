@@ -6,6 +6,7 @@ class Api {
   }
 
   _useFetch(url, method, body) {
+    console.log(body);
     return fetch(url, {
       headers: {
         authorization: this.authorization,
@@ -14,6 +15,7 @@ class Api {
       method,
       body: JSON.stringify(body),
     }).then((res) => {
+      console.log(res);
       if (res.ok) {
         return res.json();
       }
@@ -89,12 +91,14 @@ class Api {
   }
 
   async registerUserApi(email, password) {
-    return this._useFetch(`https://register.nomoreparties.co/signup)`, `POST`, {
+    console.log(email, password);
+    return this._useFetch(`https://register.nomoreparties.co/signup`, `POST`, {
       email,
       password,
     }).then((result) => {
+      console.log(result);
       return result;
-    });
+    }).catch((err) => console.log(err));
   }
 }
 

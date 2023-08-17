@@ -3,18 +3,27 @@ import Api from "./api";
 const BASE_URL = 'https://register.nomoreparties.co';
 
 export const registerUser = async (email, password) => {
-  const api = new Api();
-  try {
-    const response = await api.registerUserApi(email, password);
-    console.log(response);
-  } catch (error) {
-    console.error('Error en el registo de usuario:', error);
-  }
+  return fetch(`${BASE_URL}/signup`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  })
+    .then((response) => {
+      if (response.status === 201) {
+        return response.json();
+      }
+    })
+    .then((res) => {
+      return res;
+    });
 };
 
 export const authorize = async (email, password) => {
   try {
-    const response = await fetch(`${BASE_URL}/users/signin`, {
+    const response = await fetch(`${BASE_URL}/signin`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -26,8 +35,8 @@ export const authorize = async (email, password) => {
     const data = await response.json();
     console.log('respuesta:', data);
 
-    if (data.user) {
-      localStorage.setItem('jwt', data.jwt);
+    if (data) {
+      localStorage.setItem('jwt', data.token);
       return data;
     }
   } catch (err) {

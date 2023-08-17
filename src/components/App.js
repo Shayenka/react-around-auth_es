@@ -24,7 +24,14 @@ function App() {
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState();
 
-  const [currentUser, setCurrentUser] = useState({});
+  const api = new Api({
+    address: "https://nomoreparties.co",
+    groupId: "web_es_05",
+    token: "3270d03d-8b4c-49a2-869b-f096d27af6a5",
+  });
+  
+
+  const [currentUser, setCurrentUser] = useState({email: ""});
 
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -46,11 +53,6 @@ function App() {
   }, [loggedIn]);
 
   useEffect(() => {
-    const api = new Api({
-      address: "https://nomoreparties.co",
-      groupId: "web_es_05",
-      token: "3270d03d-8b4c-49a2-869b-f096d27af6a5",
-    });
     api
       .getUserInfo()
       .then((response) => {
@@ -62,12 +64,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const api = new Api({
-      address: "https://nomoreparties.co",
-      groupId: "web_es_05",
-      token: "3270d03d-8b4c-49a2-869b-f096d27af6a5",
-    });
-
     api.getCards()
       .then((response) => {
         setCards(response);
@@ -78,7 +74,7 @@ function App() {
   }, []);
 
   function handleUpdateUser(user) {
-    Api.editUserInfo(user.name, user.about).then((response) => {
+    api.editUserInfo(user.name, user.about).then((response) => {
       setCurrentUser(response);
       closeAllPopups();
     });
@@ -86,7 +82,7 @@ function App() {
 
   function handleUpdateAvatar(avatar) {
     const userAvatar = { avatar: avatar };
-    Api.changeAvatarProfile(userAvatar).then((response) => {
+    api.changeAvatarProfile(userAvatar).then((response) => {
       setCurrentUser(response);
       closeAllPopups();
     });
@@ -95,13 +91,13 @@ function App() {
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-    Api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
       setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
     });
   }
 
   function handleCardDelete(card) {
-    Api.deleteCard(card._id).then(() => {
+    api.deleteCard(card._id).then(() => {
       setCards(
         cards.filter((item) => {
           return item._id !== card._id;
@@ -111,7 +107,7 @@ function App() {
   }
 
   function handleAddPlaceSubmit(name, link) {
-    Api.addNewCard(name, link).then((data) => {
+    api.addNewCard(name, link).then((data) => {
       setCards([data, ...cards]);
       closeAllPopups();
     });
@@ -167,11 +163,11 @@ function App() {
           <Routes>
             <Route
               path="/signin"
-              element={<Login onLoggedIn={handleLogin} />}
+              element={<Login onLoggedIn={handleLogin} loggedIn={loggedIn} />}
             />
             <Route
               path="/signup"
-              element={<Register onRegister={handleRegisterUser} />}
+              element={<Register onRegister={handleRegisterUser} loggedIn={loggedIn} />}
             />
             <Route
               path="/"

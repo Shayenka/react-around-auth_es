@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import { ValidateEmail, ValidatePassword } from "../utils/Validator.js";
 import logo from "../images/logo.svg";
 import { PopUpSuccessfulRegister, PopUpFailedRegister } from "./InfoTooltip.js"
 
-function Register( {onRegister} ) {
+function Register( {onRegister, loggedIn} ) {
   const currentUser = useContext(CurrentUserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,6 +14,7 @@ function Register( {onRegister} ) {
   const [showPopupSuccessfulRegister, setShowPopupSuccessfulRegister] = useState(false);
   const [showPopupFailedRegister, setShowPopupFailedRegister] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setEmail(currentUser.email);
@@ -44,7 +45,7 @@ function Register( {onRegister} ) {
 
       if (userRegistered) {
         setShowPopupSuccessfulRegister(true);
-        navigate('/login');
+        navigate('/signin');
       } else {
         setShowPopupFailedRegister(true);
         console.log('Error en el registo de usuario.');
@@ -56,11 +57,12 @@ function Register( {onRegister} ) {
 
   return (
     <>
+     {location.pathname === "/signup" && !loggedIn? (
       <section className="header">
         <img className="header__logo" src={logo} alt="logo Around The U.S" />
         <div className="header__container-texts">
           <Link
-            to="/signint"
+            to="/signin"
             className="header__text"
             style={{ textDecoration: "none" }}
           >
@@ -68,6 +70,7 @@ function Register( {onRegister} ) {
           </Link>
         </div>
       </section>
+      ) :null}
       <form className="container__main" onSubmit={handleSubmit}>
         <h3 className="container__main__title">Regístrate</h3>
         <div>
@@ -86,7 +89,7 @@ function Register( {onRegister} ) {
             {emailError}
           </span>
           <input
-            type="text"
+            type="password" 
             id="password"
             placeholder="Contraseña"
             className="container__main__text"
