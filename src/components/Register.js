@@ -3,15 +3,16 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import { ValidateEmail, ValidatePassword } from "../utils/Validator.js";
 import logo from "../images/logo.svg";
-import { PopUpSuccessfulRegister, PopUpFailedRegister } from "./InfoTooltip.js"
+import { PopUpSuccessfulRegister, PopUpFailedRegister } from "./InfoTooltip.js";
 
-function Register( {onRegister, loggedIn} ) {
+function Register({ onRegister, loggedIn }) {
   const currentUser = useContext(CurrentUserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [showPopupSuccessfulRegister, setShowPopupSuccessfulRegister] = useState(false);
+  const [showPopupSuccessfulRegister, setShowPopupSuccessfulRegister] =
+    useState(false);
   const [showPopupFailedRegister, setShowPopupFailedRegister] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -45,32 +46,32 @@ function Register( {onRegister, loggedIn} ) {
 
       if (userRegistered) {
         setShowPopupSuccessfulRegister(true);
-        navigate('/signin');
+        navigate("/signin");
       } else {
         setShowPopupFailedRegister(true);
-        console.log('Error en el registo de usuario.');
+        console.log("Error en el registo de usuario.");
       }
     } catch (error) {
-      console.error('Error en el registo de usuario:', error);
+      console.error("Error en el registo de usuario:", error);
     }
   };
 
   return (
     <>
-     {location.pathname === "/signup" && !loggedIn? (
-      <section className="header">
-        <img className="header__logo" src={logo} alt="logo Around The U.S" />
-        <div className="header__container-texts">
-          <Link
-            to="/signin"
-            className="header__text"
-            style={{ textDecoration: "none" }}
-          >
-            Iniciar Sesión
-          </Link>
-        </div>
-      </section>
-      ) :null}
+      {location.pathname === "/signup" && !loggedIn ? (
+        <section className="header">
+          <img className="header__logo" src={logo} alt="logo Around The U.S" />
+          <div className="header__container-texts">
+            <Link
+              to="/signin"
+              className="header__text"
+              style={{ textDecoration: "none" }}
+            >
+              Iniciar Sesión
+            </Link>
+          </div>
+        </section>
+      ) : null}
       <form className="container__main" onSubmit={handleSubmit}>
         <h3 className="container__main__title">Regístrate</h3>
         <div>
@@ -89,7 +90,7 @@ function Register( {onRegister, loggedIn} ) {
             {emailError}
           </span>
           <input
-            type="password" 
+            type="password"
             id="password"
             placeholder="Contraseña"
             className="container__main__text"
@@ -122,11 +123,17 @@ function Register( {onRegister, loggedIn} ) {
         </div>
       </form>
       {showPopupSuccessfulRegister && (
-      <PopUpSuccessfulRegister isOpen={true} onClose={() => setShowPopupSuccessfulRegister(false)} />
-    )}
-    {showPopupFailedRegister && (
-      <PopUpFailedRegister isOpen={true} onClose={() => setShowPopupFailedRegister(false)} />
-    )}
+        <PopUpSuccessfulRegister
+          isOpen={true}
+          onClose={() => setShowPopupSuccessfulRegister(false)}
+        />
+      )}
+      {showPopupFailedRegister && (
+        <PopUpFailedRegister
+          isOpen={true}
+          onClose={() => setShowPopupFailedRegister(false)}
+        />
+      )}
     </>
   );
 }

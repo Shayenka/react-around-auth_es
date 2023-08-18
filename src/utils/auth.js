@@ -1,6 +1,4 @@
-import Api from "./api"; 
-
-const BASE_URL = 'https://register.nomoreparties.co';
+const BASE_URL = "https://register.nomoreparties.co";
 
 export const registerUser = async (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
@@ -24,19 +22,18 @@ export const registerUser = async (email, password) => {
 export const authorize = async (email, password) => {
   try {
     const response = await fetch(`${BASE_URL}/signin`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({email, password})
+      body: JSON.stringify({ email, password }),
     });
 
     const data = await response.json();
-    console.log('respuesta:', data);
 
     if (data) {
-      localStorage.setItem('jwt', data.token);
+      localStorage.setItem("jwt", data.token);
       return data;
     }
   } catch (err) {
@@ -46,18 +43,18 @@ export const authorize = async (email, password) => {
 
 export const checkTokenValidity = async (token) => {
   const response = await fetch(`${BASE_URL}/users/me`, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    }
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (response.ok) {
     const data = await response.json();
     return data;
   } else {
-    throw new Error('Token inválido');
+    throw new Error("Token inválido");
   }
 };

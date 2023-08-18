@@ -33,11 +33,10 @@ function Login({ onLoggedIn, loggedIn }) {
     }
     authorize(email, password)
       .then((data) => {
-        console.log(data);
         if (data.token) {
           console.log(data.token);
-          onLoggedIn(); 
-          navigate("/"); 
+          onLoggedIn();
+          navigate("/");
         }
       })
       .catch((err) => console.log(err));
@@ -45,20 +44,20 @@ function Login({ onLoggedIn, loggedIn }) {
 
   return (
     <>
-    {location.pathname === "/signin" && !loggedIn ? (
-      <section className="header">
-        <img className="header__logo" src={logo} alt="logo Around The U.S" />
-        <div className="header__container-texts">
-          <Link
-            to="/signup"
-            className="header__text"
-            style={{ textDecoration: "none" }}
-          >
-            Regístrate
-          </Link>
-        </div>
-      </section>
-      ) :null}
+      {location.pathname === "/signin" && !loggedIn ? (
+        <section className="header">
+          <img className="header__logo" src={logo} alt="logo Around The U.S" />
+          <div className="header__container-texts">
+            <Link
+              to="/signup"
+              className="header__text"
+              style={{ textDecoration: "none" }}
+            >
+              Regístrate
+            </Link>
+          </div>
+        </section>
+      ) : null}
       <form className="container__main" onSubmit={handleSubmit}>
         <h3 className="container__main__title">Iniciar Sesión</h3>
         <div>
@@ -77,7 +76,7 @@ function Login({ onLoggedIn, loggedIn }) {
             {emailError}
           </span>
           <input
-            type="password" 
+            type="password"
             id="password"
             placeholder="Contraseña"
             className="container__main__text"

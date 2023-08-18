@@ -29,9 +29,8 @@ function App() {
     groupId: "web_es_05",
     token: "3270d03d-8b4c-49a2-869b-f096d27af6a5",
   });
-  
 
-  const [currentUser, setCurrentUser] = useState({email: ""});
+  const [currentUser, setCurrentUser] = useState({ email: "" });
 
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -42,15 +41,15 @@ function App() {
       checkTokenValidity(token)
         .then((userData) => {
           setLoggedIn(true);
-          setCurrentUser(userData.data); // Guardando los datos del usuario
+          setCurrentUser(userData.data);
         })
         .catch((error) => {
           console.error("Error de token:", error);
         });
     } else {
-      setLoggedIn(false); // Aquí, si no hay token, el usuario no está autenticado
+      setLoggedIn(false);
     }
-  }, [loggedIn]);
+  }, []);
 
   useEffect(() => {
     api
@@ -64,7 +63,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    api.getCards()
+    api
+      .getCards()
       .then((response) => {
         setCards(response);
       })
@@ -135,7 +135,7 @@ function App() {
       return response;
     } catch (error) {
       console.error("Error during user registration:", error);
-      throw error; 
+      throw error;
     }
   }
 
@@ -167,7 +167,9 @@ function App() {
             />
             <Route
               path="/signup"
-              element={<Register onRegister={handleRegisterUser} loggedIn={loggedIn} />}
+              element={
+                <Register onRegister={handleRegisterUser} loggedIn={loggedIn} />
+              }
             />
             <Route
               path="/"

@@ -6,7 +6,6 @@ class Api {
   }
 
   _useFetch(url, method, body) {
-    console.log(body);
     return fetch(url, {
       headers: {
         authorization: this.authorization,
@@ -91,14 +90,15 @@ class Api {
   }
 
   async registerUserApi(email, password) {
-    console.log(email, password);
     return this._useFetch(`https://register.nomoreparties.co/signup`, `POST`, {
       email,
       password,
-    }).then((result) => {
-      console.log(result);
-      return result;
-    }).catch((err) => console.log(err));
+    })
+      .then((result) => {
+        console.log(result);
+        return result;
+      })
+      .catch((err) => console.log(err));
   }
 }
 
