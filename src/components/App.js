@@ -1,6 +1,6 @@
 import "../index.css";
 import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
@@ -32,7 +32,9 @@ function App() {
 
   const [currentUser, setCurrentUser] = useState({ email: "" });
 
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const Navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
@@ -40,14 +42,14 @@ function App() {
     if (token) {
       checkTokenValidity(token)
         .then((userData) => {
-          setLoggedIn(true);
+          setIsLoggedIn(true);
           setCurrentUser(userData.data);
         })
         .catch((error) => {
           console.error("Error de token:", error);
         });
     } else {
-      setLoggedIn(false);
+      setIsLoggedIn(false);
     }
   }, []);
 
@@ -140,12 +142,13 @@ function App() {
   }
 
   function handleLogin(data) {
-    setLoggedIn(true);
+    setIsLoggedIn(true);
   }
 
   function handleLogout() {
     localStorage.removeItem("jwt");
-    setLoggedIn(false);
+    setIsLoggedIn(false);
+    Navigate("/signin");
   }
 
   function closeAllPopups() {
@@ -159,23 +162,23 @@ function App() {
     <div className="body">
       <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
-          {loggedIn ? <Header onLogout={handleLogout} /> : null}
+          {isLoggedIn ? <Header onLogout={handleLogout} /> : null}
           <Routes>
             <Route
               path="/signin"
-              element={<Login onLoggedIn={handleLogin} loggedIn={loggedIn} />}
-            />
+              element={isLoggedIn ? <Navigate to="/" /> : <Login onLoggedIn={handleLogin} loggedIn={isLoggedIn} />}
+              />
             <Route
               path="/signup"
               element={
-                <Register onRegister={handleRegisterUser} loggedIn={loggedIn} />
+                <Register onRegister={handleRegisterUser} loggedIn={isLoggedIn} />
               }
             />
             <Route
               path="/"
-              element={
+              element={ isLoggedIn ? 
                 <ProtectedRoute
-                  loggedIn={loggedIn}
+                  loggedIn={isLoggedIn}
                   component={Main}
                   onEditProfileClick={handleEditProfileClick}
                   onAddPlaceClick={handleAddPlaceClick}
@@ -185,7 +188,7 @@ function App() {
                   onCardLike={handleCardLike}
                   onCardDelete={handleCardDelete}
                 />
-              }
+                : <Navigate to="/signin"/>}
             />
           </Routes>
           {isEditProfilePopupOpen && (

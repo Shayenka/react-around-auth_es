@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ValidateEmail, ValidatePassword } from "../utils/Validator.js";
 import logo from "../images/logo.svg";
@@ -9,8 +9,22 @@ function Login({ onLoggedIn, loggedIn }) {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [token, setToken] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+
+
+  useEffect(() => {
+    const handlecheckToken = () => {
+      if (localStorage.getItem("jwt")) {
+        const jwt = localStorage.getItem("jwt");
+        setToken(jwt);
+        navigate("/");
+      }
+    };
+    handlecheckToken();
+  }, [navigate]);
+
 
   function handleEmailChange(evt) {
     const newEmail = evt.target.value;
@@ -34,13 +48,17 @@ function Login({ onLoggedIn, loggedIn }) {
     authorize(email, password)
       .then((data) => {
         if (data.token) {
-          console.log(data.token);
           onLoggedIn();
           navigate("/");
         }
       })
       .catch((err) => console.log(err));
   }
+
+  // if (loggedIn) {
+  //   navigate("/");
+  //   return null;
+  // }
 
   return (
     <>

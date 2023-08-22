@@ -4,7 +4,6 @@ import PopUpFailedRegisterImage from "../images/NoRegistrado.png";
 import closePopUp from "../images/CloseIcon.svg";
 
 export function PopUpSuccessfulRegister(props) {
-  console.log("PopUpSuccessfulRegister renderizado. isOpen:", props.isOpen);
   return (
     <section
       className={`popup__container-register ${

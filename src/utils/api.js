@@ -14,7 +14,6 @@ class Api {
       method,
       body: JSON.stringify(body),
     }).then((res) => {
-      console.log(res);
       if (res.ok) {
         return res.json();
       }

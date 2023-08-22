@@ -7,19 +7,3 @@ const ProtectedRoute = ({ path, component: Component, loggedIn, ...props }) => {
 
 export default ProtectedRoute;
 
-
-
-
-
-
-// import React from 'react';
-// import { Route, useNavigate } from "react-router-dom";
-
-// const ProtectedRoute = ({ component, loggedIn, ...props  }) => {
-//   return (
-//     <Route {...props}>
-//         {loggedIn ? component : <useNavigate to="./signin" />}
-//     </Route>
-// )}
-
-// export default ProtectedRoute;

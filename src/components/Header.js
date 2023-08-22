@@ -4,6 +4,7 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import { Link } from "react-router-dom";
 import logo from "../images/logo.svg";
 
+
 function Header({ onLogout }) {
   const currentUser = useContext(CurrentUserContext);
   return (

@@ -42,13 +42,13 @@ function Register({ onRegister, loggedIn }) {
     try {
       const userRegistered = await onRegister(email, password);
 
-      console.log(userRegistered);
-
       if (userRegistered) {
         setShowPopupSuccessfulRegister(true);
+        setShowPopupFailedRegister(false);
         navigate("/signin");
       } else {
         setShowPopupFailedRegister(true);
+        setShowPopupSuccessfulRegister(false);
         console.log("Error en el registo de usuario.");
       }
     } catch (error) {
@@ -107,7 +107,7 @@ function Register({ onRegister, loggedIn }) {
         <button
           type="submit"
           className="container__main__button"
-          onClick={handleSubmit}
+          // onClick={handleSubmit}
         >
           Regístrate
         </button>
