@@ -1,6 +1,6 @@
 import "../index.css";
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
@@ -34,7 +34,7 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
@@ -148,7 +148,7 @@ function App() {
   function handleLogout() {
     localStorage.removeItem("jwt");
     setIsLoggedIn(false);
-    Navigate("/signin");
+    navigate("/signin");
   }
 
   function closeAllPopups() {
@@ -166,7 +166,7 @@ function App() {
           <Routes>
             <Route
               path="/signin"
-              element={isLoggedIn ? <Navigate to="/" /> : <Login onLoggedIn={handleLogin} loggedIn={isLoggedIn} />}
+              element={<Login onLoggedIn={handleLogin} loggedIn={isLoggedIn} />}
               />
             <Route
               path="/signup"

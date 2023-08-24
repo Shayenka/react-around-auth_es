@@ -17,9 +17,13 @@ function Login({ onLoggedIn, loggedIn }) {
   useEffect(() => {
     const handlecheckToken = () => {
       if (localStorage.getItem("jwt")) {
+        console.log("prueba")
         const jwt = localStorage.getItem("jwt");
         setToken(jwt);
         navigate("/");
+      } else {
+        console.log("prueba2")
+        navigate("/signin");
       }
     };
     handlecheckToken();
@@ -54,11 +58,6 @@ function Login({ onLoggedIn, loggedIn }) {
       })
       .catch((err) => console.log(err));
   }
-
-  // if (loggedIn) {
-  //   navigate("/");
-  //   return null;
-  // }
 
   return (
     <>

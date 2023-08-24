@@ -45,7 +45,9 @@ function Register({ onRegister, loggedIn }) {
       if (userRegistered) {
         setShowPopupSuccessfulRegister(true);
         setShowPopupFailedRegister(false);
-        navigate("/signin");
+        setTimeout(() => {
+          navigate("/signin");
+        },2000)
       } else {
         setShowPopupFailedRegister(true);
         setShowPopupSuccessfulRegister(false);
