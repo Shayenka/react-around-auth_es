@@ -13,23 +13,6 @@ function Login({ onLoggedIn, loggedIn }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-
-  useEffect(() => {
-    const handlecheckToken = () => {
-      if (localStorage.getItem("jwt")) {
-        console.log("prueba")
-        const jwt = localStorage.getItem("jwt");
-        setToken(jwt);
-        navigate("/");
-      } else {
-        console.log("prueba2")
-        navigate("/signin");
-      }
-    };
-    handlecheckToken();
-  }, [navigate]);
-
-
   function handleEmailChange(evt) {
     const newEmail = evt.target.value;
     setEmail(newEmail);

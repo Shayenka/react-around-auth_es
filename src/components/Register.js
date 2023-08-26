@@ -109,7 +109,6 @@ function Register({ onRegister, loggedIn }) {
         <button
           type="submit"
           className="container__main__button"
-          // onClick={handleSubmit}
         >
           Regístrate
         </button>

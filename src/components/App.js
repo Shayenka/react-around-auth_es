@@ -44,6 +44,7 @@ function App() {
         .then((userData) => {
           setIsLoggedIn(true);
           setCurrentUser(userData.data);
+          navigate("/");
         })
         .catch((error) => {
           console.error("Error de token:", error);
@@ -51,7 +52,7 @@ function App() {
     } else {
       setIsLoggedIn(false);
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     api
@@ -146,6 +147,7 @@ function App() {
   }
 
   function handleLogout() {
+    console.log("Logging out...");
     localStorage.removeItem("jwt");
     setIsLoggedIn(false);
     navigate("/signin");
@@ -176,7 +178,7 @@ function App() {
             />
             <Route
               path="/"
-              element={ isLoggedIn ? 
+              element={
                 <ProtectedRoute
                   loggedIn={isLoggedIn}
                   component={Main}
@@ -188,8 +190,8 @@ function App() {
                   onCardLike={handleCardLike}
                   onCardDelete={handleCardDelete}
                 />
-                : <Navigate to="/signin"/>}
-            />
+              }
+              />
           </Routes>
           {isEditProfilePopupOpen && (
             <EditProfilePopup
