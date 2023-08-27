@@ -1,6 +1,6 @@
 import "../index.css";
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
@@ -30,7 +30,7 @@ function App() {
     token: "3270d03d-8b4c-49a2-869b-f096d27af6a5",
   });
 
-  const [currentUser, setCurrentUser] = useState({ email: "" });
+  const [currentUser, setCurrentUser] = useState({ email: null });
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -43,7 +43,6 @@ function App() {
       checkTokenValidity(token)
         .then((userData) => {
           setIsLoggedIn(true);
-          setCurrentUser(userData.data);
           navigate("/");
         })
         .catch((error) => {
@@ -52,7 +51,7 @@ function App() {
     } else {
       setIsLoggedIn(false);
     }
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     api

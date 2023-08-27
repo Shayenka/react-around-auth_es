@@ -9,7 +9,6 @@ function Login({ onLoggedIn, loggedIn }) {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [token, setToken] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 

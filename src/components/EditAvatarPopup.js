@@ -40,6 +40,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
           className="popup__text"
           required
           onChange={handleAvatarChange}
+          ref={avatar}
         />
         <span className="popup__input-error_main" id="linkAvatar-error">{avatarError}</span>
       </div>
